@@ -1,4 +1,4 @@
-import { Fragment, useState, useEffect } from "react";
+import { Fragment, Component } from "react";
 import Customers from "./Customers";
 import styles from "./CustomerFilter.module.css";
 
@@ -8,29 +8,48 @@ const DUMMY_CUSTOMERS = [
   { id: "c3", name: "Ирина" },
 ];
 
-const CustomerFilter = () => {
-  const [filteredCustomers, setFilteredCustomers] = useState(DUMMY_CUSTOMERS);
-  const [filter, setFilter] = useState("");
+class CustomerFilter extends Component {
+  constructor() {
+    super();
+    this.state = {
+      filteredCustomers: [],
+      filter: "",
+    };
+  }
 
-  useEffect(() => {
-    setFilteredCustomers(
-      DUMMY_CUSTOMERS.filter((customer) => customer.name.includes(filter))
+  componentDidMount() {
+    // Отправить HTTP запрос...
+    this.setState({
+      filteredCustomers: DUMMY_CUSTOMERS,
+    });
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.filter !== this.state.filter) {
+      this.setState({
+        filteredCustomers: DUMMY_CUSTOMERS.filter((customer) =>
+          customer.name.includes(this.state.filter)
+        ),
+      });
+    }
+  }
+
+  filterHandler(event) {
+    this.setState({
+      filter: event.target.value,
+    });
+  }
+
+  render() {
+    return (
+      <Fragment>
+        <div className={styles.filter}>
+          <input type="search" onChange={this.filterHandler.bind(this)} />
+        </div>
+        <Customers customers={this.state.filteredCustomers} />
+      </Fragment>
     );
-  }, [filter]);
-
-  const filterHandler = (event) => {
-    setFilter(event.target.value);
-  };
-
-  return (
-    <Fragment>
-      <div className={styles.filter}>
-        <input type="search" onChange={filterHandler} />
-      </div>
-
-      <Customers customers={filteredCustomers} />
-    </Fragment>
-  );
-};
+  }
+}
 
 export default CustomerFilter;

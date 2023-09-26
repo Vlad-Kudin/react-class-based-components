@@ -2,6 +2,11 @@ import { Component } from "react";
 import styles from "./Customer.module.css";
 
 class Customer extends Component {
+
+  componentWillUnmount() {
+    console.log("Заказчик будет удален!")
+  }
+
   render() {
     return <li className={styles.customer}>{this.props.name}</li>;
   }
