@@ -12,6 +12,12 @@ class Customers extends Component {
     }
   };
 
+  componentDidUpdate() {
+    if (this.props.customers.length === 0) {
+      throw new Error("Нет заказчиков!");
+    }
+  };
+
   toggleCustomersHandler() {
     this.setState((curState) => {
       return { showCustomers: !curState.showCustomers };
