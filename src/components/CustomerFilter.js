@@ -1,14 +1,11 @@
 import { Fragment, Component } from "react";
 import Customers from "./Customers";
 import styles from "./CustomerFilter.module.css";
-
-const DUMMY_CUSTOMERS = [
-  { id: "c1", name: "Дмитрий" },
-  { id: "c2", name: "Михаил" },
-  { id: "c3", name: "Ирина" },
-];
+import CustomersContext from "../store/customers-context";
 
 class CustomerFilter extends Component {
+  static contextType = CustomersContext;
+
   constructor() {
     super();
     this.state = {
@@ -20,14 +17,14 @@ class CustomerFilter extends Component {
   componentDidMount() {
     // Отправить HTTP запрос...
     this.setState({
-      filteredCustomers: DUMMY_CUSTOMERS,
+      filteredCustomers: this.context.customers,
     });
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.filter !== this.state.filter) {
       this.setState({
-        filteredCustomers: DUMMY_CUSTOMERS.filter((customer) =>
+        filteredCustomers: this.context.customers.filter((customer) =>
           customer.name.includes(this.state.filter)
         ),
       });
